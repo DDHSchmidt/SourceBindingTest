@@ -1,0 +1,66 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SourceBindingTest"
+             xmlns:effects="clr-namespace:SourceBindingTest.Effects"
+             xmlns:selectors="clr-namespace:SourceBindingTest.Selectors"
+             xmlns:models="clr-namespace:SourceBindingTest.Models"
+             xmlns:viewmodels="clr-namespace:SourceBindingTest.ViewModels"
+             xmlns:views="clr-namespace:SourceBindingTest"
+             x:Class="SourceBindingTest.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="testEvenTemplate" x:DataType="models:ItemModel">
+                <Grid
+                    effects:PressedRoutingEffect.ClickCommand="{Binding Source={x:RelativeSource Mode=FindAncestorBindingContext, AncestorType={x:Type viewmodels:MainPageViewModel}}, Path=SelectCurrentItemCommand, x:DataType={x:Null}}"
+                    effects:PressedRoutingEffect.CommandParameter="{Binding ., x:DataType={x:Null}}"
+                    BackgroundColor="LightYellow"
+                    Margin="4"
+                    Padding="4"
+                    ColumnDefinitions="*,*"
+                    >
+                    <Grid.Effects>
+                        <effects:PressedRoutingEffect />
+                    </Grid.Effects>
+                    <Label Grid.Column="0" Text="{Binding Name}" />
+                    <Label
+                        Grid.Column="1"
+                        Text="Select via FindAncestorBindingContext of ViewModel"
+                        Margin="8,0"
+                        />
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="testOddTemplate" x:DataType="models:ItemModel">
+                <Grid
+                    effects:PressedRoutingEffect.ClickCommand="{Binding Source={x:RelativeSource AncestorType={x:Type views:MainPage}}, Path=BindingContext.SelectCurrentItemCommand, x:DataType={x:Null}}"
+                    effects:PressedRoutingEffect.CommandParameter="{Binding ., x:DataType={x:Null}}"
+                    BackgroundColor="LightGreen"
+                    Padding="4"
+                    Margin="4"
+                    ColumnDefinitions="*,*"
+                    >
+                    <Grid.Effects>
+                        <effects:PressedRoutingEffect />
+                    </Grid.Effects>
+                    <Label Grid.Column="0" Text="{Binding Name}" />
+                    <Label
+                        Grid.Column="1"
+                        Text="Select via AncestorType of View"
+                        Margin="8,0"
+                        />
+                </Grid>
+            </DataTemplate>
+
+            <selectors:ItemTemplateSelector
+                x:Key="ItemTemplateSelector"
+                EvenTemplate="{StaticResource testEvenTemplate}"
+                OddTemplate="{StaticResource testOddTemplate}"/>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
